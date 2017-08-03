@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="Author" content=" ">
+    <title>Document</title>
+    <style type="text/css">
+        *{margin: 0;padding: 0;}
+        a{text-decoration: none;color: #333;}
+        ul,li{list-style: none;}
+        body{font-size: 14px;font-family: "微软雅黑";}
+        #wrap{width: 800px; height: 480px; margin: 80px auto; position: relative;}
+        .box{width: 800px; height: 480px; box-shadow: 0 0 1px #000;}
+        .box li{position: absolute; display:none;}
+        .box li img{width: 800px; height: 480px;}
+
+        .list{position:absolute; width: 160px; left:calc(50% - 80px); bottom: 10px;}
+        .list li{width:20px; height:20px; padding: 5px; background: orange; border-radius: 50%; text-align: center; line-height: 20px; float: left; margin: 5px; color: #fff; cursor: pointer;}
+        .list li.active{background: pink;}
+
+        .item{position: absolute; background: rgba(0,0,0,.5); width: 60px; height: 30px; color: #fff; font-size: 30px; text-align: center; line-height: 30px; top:calc(50% - 30px); opacity: 0; transition: all .5s;}
+        #wrap:hover .item{opacity: 1;}
+        #prev{left: 10px;}
+        #next{right: 10px;}
+    </style>
+</head>
+<body>
+
+    <div id="wrap">
+        <ul class="box">
+            <li style="display: block"><img src="images/4.jpg" alt="" /></li>
+            <li><img src="images/5.jpg" alt="" /></li>
+            <li><img src="images/6.jpg" alt="" /></li>
+            <li><img src="images/7.jpg" alt="" /></li>
+        </ul>
+
+        <ul class="list">
+            <li class="active">1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+        </ul>
+
+        <a href="javascript:void(0)" class="item" id="prev">&lt;</a>
+        <a href="javascript:void(0)" class="item" id="next">&gt;</a>
+    </div>
+
+    <script type="text/javascript">
+        var wrap = document.getElementById("wrap");
+        var liDoms = document.querySelectorAll('.box li');
+        var btnDoms = document.querySelectorAll('.list li');
+        var prev = document.getElementById('prev');
+        var next = document.getElementById('next');
+        var index = 0;
+        var time = null;
+
+        for(var i=0;i<liDoms.length;i++){
+            btnDoms[i].index = i;
+            btnDoms[i].onclick = function(){
+                for(var j=0;j<liDoms.length;j++){
+                    liDoms[j].style.display = 'none';
+                    btnDoms[j].className = '';
+                };
+                liDoms[this.index].style.display = 'block';
+                this.className = 'active';
+                //索引同步
+                index = this.index;
+            };
+        }
+
+        next.onclick = function(){
+            index++;
+            //边界值判断
+            index %= liDoms.length;
+            for(var j=0;j<liDoms.length;j++){
+                    liDoms[j].style.display = 'none';
+                    btnDoms[j].className = '';
+                };
+                liDoms[index].style.display = 'block';
+                btnDoms[index].className = 'active';
+        }
+
+        prev.onclick = function(){
+            index--;
+            if(index<0)index = liDoms.length - 1;
+            //边界值判断
+            for(var j=0;j<liDoms.length;j++){
+                    liDoms[j].style.display = 'none';
+                    btnDoms[j].className = '';
+                };
+                liDoms[index].style.display = 'block';
+                btnDoms[index].className = 'active';
+        }
+
+        auto();
+
+        wrap.onmouseover = function(){
+            clearInterval(time);
+        }
+
+        wrap.onmouseout = function(){
+            auto();
+        }
+
+        //自动轮播
+        function auto(){
+            time = setInterval(function(){
+                index++;
+                index %= liDoms.length;
+                for(var j=0;j<liDoms.length;j++){
+                    liDoms[j].style.display = 'none';
+                    btnDoms[j].className = '';
+                };
+                liDoms[index].style.display = 'block';
+                btnDoms[index].className = 'active';
+            },2000);
+        };
+
+    </script>
+</body>
+</html>
